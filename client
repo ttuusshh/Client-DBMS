@@ -1,0 +1,61 @@
+CREATE TABLE `test_db`.`maids` (
+                                   `id` INT NOT NULL AUTO_INCREMENT,
+                                   `name` VARCHAR(45) NOT NULL,
+                                   `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                   `updated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                   PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `client_details` (
+                                  `id` INT NOT NULL AUTO_INCREMENT,
+                                  `name` VARCHAR(45) NOT NULL,
+                                  `phone_number` VARCHAR(45) NOT NULL,
+                                  `external_client` varchar(20) NOT NULL,
+                                  `email_id` VARCHAR(45) NOT NULL,
+                                  `address` VARCHAR(150) NOT NULL,
+                                  `external_client_id` varchar(500) NOT NULL,
+                                  `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                  `updated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP On Update CURRENT_TIMESTAMP,
+                                  PRIMARY KEY (`id`),
+                                  unique key `external_client_id_unique` (`external_client_id`)
+);
+
+CREATE TABLE `client_login_history` (
+                                        `id` INT NOT NULL AUTO_INCREMENT,
+                                        `external_client_id` varchar(500) NOT NULL,
+                                        `last_login` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP On Update CURRENT_TIMESTAMP,
+                                        `total_login`   bigint unsigned ,
+                                        PRIMARY KEY (`id`),
+                                        foreign key(`external_client_id`) references client_details(`external_client_id`) ,
+                                        unique key `external_client_id_unique` (`external_client_id`)
+);
+create table test_db.job_details (
+                                     `id` INT NOT NULL AUTO_INCREMENT,
+                                     `job_name` varchar(50),
+                                     `approx_duration` int,
+                                     `job_type` varchar(45),
+                                     `approx_min_price` varchar(30),
+                                     `approx_max_price` varchar(30),
+                                     UNIQUE KEY `job_id_unique` (`id`)
+);
+
+CREATE TABLE `test_db`.`bookings` (
+                                      `id` INT NOT NULL AUTO_INCREMENT,
+                                      `booking_id` VARCHAR(456) NOT NULL,
+                                      `maid_id` int NOT NULL,
+                                      `client_id` int NOT NULL,
+                                      `email_id` VARCHAR(45) NOT NULL,
+                                      `job_id` int NOT NULL,
+                                      `job_status` INT NOT NULL,
+                                      `scheduled_date` DATETIME NOT NULL,
+                                      `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                      `updated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                      PRIMARY KEY (`id`),
+                                      FOREIGN KEY (`client_id`)
+                                          REFERENCES client_details (`id`),
+                                      FOREIGN KEY (`maid_id`)
+                                          REFERENCES maids (`id`),
+                                      FOREIGN KEY (`job_id`)
+                                          REFERENCES job_details (`id`),
+                                      UNIQUE KEY `booking_id_unique` (`booking_id`)
+);
